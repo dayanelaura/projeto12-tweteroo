@@ -53,8 +53,6 @@ app.post('/tweets', (request, response) => {
 app.get("/tweets", (request, response) => {
     if(usuarios.length===0)
     return response.status(400).send('Usuário não logado');
-    else if(tamanho===0)
-    return response.status(400).send('0 publicações. \n Poste algo para ver a lista de tweets.');
 
     if (tamanho !== tweets.length)
     return response.send(ultimosTweets);
@@ -76,10 +74,10 @@ app.get("/tweets", (request, response) => {
         });
     })
     tamanho++;
-    return response.send(ultimosTweets);
-});
 
-//Tentando organizar os commits
+    const dezUltimos = ultimosTweets.filter((value, index) => index<10);
+    return response.send(dezUltimos);
+});
 
 app.listen(5000, () => {
     console.log("Server running in port: 5000");
