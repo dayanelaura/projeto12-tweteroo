@@ -8,12 +8,16 @@ app.use(express.json());
 let usuarios = [];
 let tweets = [];
 let ultimosTweets = [];
+let tamanho = 0;
 
-/* {
+/* 
+BODY /sign-up:
+{
     "username": "bobesponja",
     "avatar": "https://super.abril.com.br/wp-content/uploads/2020/09/04-09_gato_SITE.jpg?quality=70&strip=info"
 }
-    {
+BODY /tweets:
+{
 	"username": "bobesponja",
     "tweet": "eu amo o hub"
 } */
@@ -31,6 +35,7 @@ app.post('/sign-up', (request, response) => {
 });
 
 app.post('/tweets', (request, response) => {
+    ultimosTweets = [];
     const tweetObject = request.body;
     const { username, tweet } = request.body;
 
@@ -39,50 +44,39 @@ app.post('/tweets', (request, response) => {
 
     tweets.push(tweetObject);
     console.log(tweets);
+
+    tamanho = tweets.length;
+
     return response.status(201).send("OK");
 });
 
 app.get("/tweets", (request, response) => {
-    const ultimaPosicao = tweets.length-1;
-    
-    if(tweets.length<10){
-        for (let i = ultimaPosicao; i>=0; i--){
-            const { username, tweet } = tweets[i];
+    if(usuarios.length===0)
+    return response.status(400).send('Usuário não logado');
+    else if(tamanho===0)
+    return response.status(400).send('0 publicações. \n Poste algo para ver a lista de tweets.');
 
-            usuarios.forEach((usuario) => {
-                if(usuario.username === username){
-                   
-                    const ultimoTweet = {
-                        username: username,
-                        avatar: usuario.avatar,
-                        tweet: tweet,
-                    };
-                    ultimosTweets.push(ultimoTweet);
+    if (tamanho !== tweets.length)
+    return response.send(ultimosTweets);
 
+    tweets.forEach( tweetObject => {        
+        const { username, tweet } = tweetObject;
+
+        usuarios.forEach((usuarioObject) => {
+            const { avatar } = usuarioObject;
+
+            if(usuarioObject.username === tweetObject.username){
+                const ultimoTweet = {
+                    username: username,
+                    avatar: avatar,
+                    tweet: tweet,
                 };
-            });
-        };
-    } else {
-
-        const primeiraPosicao = (tweets.length-10);
-        for (let i = ultimaPosicao; i>=primeiraPosicao; i--){
-            const { username, tweet } = tweets[i];
-
-            usuarios.forEach((usuario) => {
-                if(usuario.username === username){  
-                    const ultimoTweet = {
-                        username: username,
-                        avatar: usuario.avatar,
-                        tweet: tweet,
-                    };
-                    ultimosTweets.push(ultimoTweet);
-                };
-            });
-
-        };
-    }
-
-    response.send(ultimosTweets);
+                ultimosTweets.unshift(ultimoTweet);
+            };
+        });
+    })
+    tamanho++;
+    return response.send(ultimosTweets);
 });
 
 app.listen(5000, () => {
