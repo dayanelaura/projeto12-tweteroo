@@ -8,6 +8,7 @@ app.use(express.json());
 let usuarios = [];
 let tweets = [];
 let ultimosTweets = [];
+let dezUltimos = [];
 let tamanho = 0;
 
 /* 
@@ -55,7 +56,7 @@ app.get("/tweets", (request, response) => {
     return response.status(400).send('Usuário não logado');
 
     if (tamanho !== tweets.length)
-    return response.send(ultimosTweets);
+    return response.send(dezUltimos);
 
     tweets.forEach( tweetObject => {        
         const { username, tweet } = tweetObject;
@@ -75,7 +76,7 @@ app.get("/tweets", (request, response) => {
     })
     tamanho++;
 
-    const dezUltimos = ultimosTweets.filter((value, index) => index<10);
+    dezUltimos = ultimosTweets.filter((value, index) => index<10);
     return response.send(dezUltimos);
 });
 
