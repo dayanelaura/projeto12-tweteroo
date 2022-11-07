@@ -79,6 +79,8 @@ app.get("/tweets", (request, response) => {
     return response.send(ultimosTweets);
 });
 
+//Tentando organizar os commits
+
 app.listen(5000, () => {
     console.log("Server running in port: 5000");
 })
