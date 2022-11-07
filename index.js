@@ -12,8 +12,8 @@ let ultimosTweets = [];
 /* {
     "username": "bobesponja",
     "avatar": "https://super.abril.com.br/wp-content/uploads/2020/09/04-09_gato_SITE.jpg?quality=70&strip=info"
-} */
-/* {
+}
+    {
 	"username": "bobesponja",
     "tweet": "eu amo o hub"
 } */
@@ -43,20 +43,42 @@ app.post('/tweets', (request, response) => {
 });
 
 app.get("/tweets", (request, response) => {
-    const ultimoTweet = tweets.length-1;
+    const ultimaPosicao = tweets.length-1;
     
     if(tweets.length<10){
-        for (let i = ultimoTweet; i>=0; i--){
-            const tweet = tweets[i];
-            ultimosTweets.push(tweet);
-            //lembrando que não vem com o avatar e tem que adicionar de alguma forma!
+        for (let i = ultimaPosicao; i>=0; i--){
+            const { username, tweet } = tweets[i];
+
+            usuarios.forEach((usuario) => {
+                if(usuario.username === username){
+                   
+                    const ultimoTweet = {
+                        username: username,
+                        avatar: usuario.avatar,
+                        tweet: tweet,
+                    };
+                    ultimosTweets.push(ultimoTweet);
+
+                };
+            });
         };
-    }else{
-        const primeiroTweet = (tweets.length-10);
-        for (let i = ultimoTweet; i>=primeiroTweet; i--){
-            const tweet = tweets[i];
-            ultimosTweets.push(tweet);
-            //lembrando que não vem com o avatar e tem que adicionar de alguma forma!
+    } else {
+
+        const primeiraPosicao = (tweets.length-10);
+        for (let i = ultimaPosicao; i>=primeiraPosicao; i--){
+            const { username, tweet } = tweets[i];
+
+            usuarios.forEach((usuario) => {
+                if(usuario.username === username){  
+                    const ultimoTweet = {
+                        username: username,
+                        avatar: usuario.avatar,
+                        tweet: tweet,
+                    };
+                    ultimosTweets.push(ultimoTweet);
+                };
+            });
+
         };
     }
 
