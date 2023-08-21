@@ -71,9 +71,9 @@ app.get("/tweets", (request, response) => {
                     tweet: tweet,
                 };
                 ultimosTweets.unshift(ultimoTweet);
-            };
+            }
         });
-    })
+    });
     tamanho++;
 
     dezUltimos = ultimosTweets.filter((value, index) => index<10);
@@ -82,4 +82,4 @@ app.get("/tweets", (request, response) => {
 
 app.listen(5000, () => {
     console.log("Server running in port: 5000");
-})
+});
